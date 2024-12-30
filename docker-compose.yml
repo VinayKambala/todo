@@ -1,0 +1,32 @@
+version: '3.3'
+services:
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - spring-boot-network
+
+  spring-boot-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-boot-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    networks:
+      - spring-boot-network
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/todo_db
+
+volumes:
+  mongo-data:
+
+networks:
+  spring-boot-network:
+
